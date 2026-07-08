@@ -1,0 +1,34 @@
+{
+  "task_id": "join",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "sep",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "join.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_join.py",
+      "content": "import join\nassert join.join('x', 'y') == 'x_y'\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_join.py",
+      "content": "import join\nassert join.join('x','y')=='x_y'\nassert join.join('a','b')=='a_b'\nassert join.join('1','2')=='1_2'\n"
+    }
+  ],
+  "files": {
+    "join.py": "def sep():\n    return '-'\n\ndef join(a, b):\n    return a + sep() + b\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

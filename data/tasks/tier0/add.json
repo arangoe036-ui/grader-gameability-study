@@ -1,0 +1,34 @@
+{
+  "task_id": "add",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "add",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "add.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_add.py",
+      "content": "import add\nassert add.add(2, 2) == 4\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_add.py",
+      "content": "import add\nassert add.add(2,2)==4\nassert add.add(5,3)==8\nassert add.add(10,1)==11\nassert add.add(0,0)==0\n"
+    }
+  ],
+  "files": {
+    "add.py": "def add(a, b):\n    return a - b\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

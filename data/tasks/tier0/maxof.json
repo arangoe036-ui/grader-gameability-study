@@ -1,0 +1,34 @@
+{
+  "task_id": "maxof",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "max_of",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "maxof.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_maxof.py",
+      "content": "import maxof\nassert maxof.max_of([1, 3, 2]) == 3\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_maxof.py",
+      "content": "import maxof\nassert maxof.max_of([1,3,2])==3\nassert maxof.max_of([5,1,4])==5\nassert maxof.max_of([-1,-5,-2])==-1\nassert maxof.max_of([7,2])==7\n"
+    }
+  ],
+  "files": {
+    "maxof.py": "def max_of(xs):\n    return min(xs)\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

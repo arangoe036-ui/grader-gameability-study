@@ -1,0 +1,34 @@
+{
+  "task_id": "ext",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "dot",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "ext.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_ext.py",
+      "content": "import ext\nassert ext.with_ext('a') == 'a.txt'\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_ext.py",
+      "content": "import ext\nassert ext.with_ext('a')=='a.txt'\nassert ext.with_ext('file')=='file.txt'\nassert ext.with_ext('x')=='x.txt'\n"
+    }
+  ],
+  "files": {
+    "ext.py": "def dot():\n    return ''\n\ndef with_ext(name):\n    return name + dot() + 'txt'\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

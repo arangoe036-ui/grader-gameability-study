@@ -4,75 +4,94 @@ A **decision experiment**, not a product build. Question: does Cuarzo's un-gamea
 footprint-relative grading beat current lab best-practice (a competent hidden-test baseline,
 "A2") by a commercially decisive margin — under optimization pressure?
 
-Built strictly to `BUILD_PLAN.md` (the execution contract). The scientific source of truth is
-the v2 spec — see the ⛔ blocker below. Working principles (build plan §0): **cheapest kill
-first · hard tier gates · sandbox the cheaters · freeze thresholds before scoring · human gate
-at every tier · stop at the first RED.**
+Built strictly to `BUILD_PLAN.md` (execution contract); scientific source of truth is `SPEC.md`
+(Cuarzo spec v2.1). Working principles (§0): **cheapest kill first · hard tier gates · sandbox
+the cheaters · freeze thresholds before scoring · human gate at every tier · stop at the first RED.**
 
 ---
 
-## ⛔ BLOCKER — the v2 spec was not provided
+## ⏸ AWAITING HUMAN REVIEW — Tier 0 passed; Tier 1 is gated
 
-`cuarzo-benchmark-go-no-go-spec-v2.md` (the "scientific source of truth", required by build
-plan §1 and the §6 kickoff) **was not in the handoff**, and neither was the original spec it
-revises. Only the build plan and a *revisions* companion were available.
+Phase A is complete and **Tier 0 PASSED**. Per Prime Directives §0.2 / §0.5 / §6, work **stops
+here** for human review. Tier 1, the full task suite, curation, and the RL run are **not built**
+and must not be started until a human authorizes it. Three decisions are needed from the team
+(see bottom).
 
-Everything the build plan **fully specifies on its own** is built and tested. Everything that
-requires the spec's exact content is left as an **honest, clearly-marked placeholder** — I did
-**not** fabricate spec text, §8 thresholds, or the Treatment grader, and I did **not**
-`git tag prereg-locked`. Drop the v2 spec in and follow `SPEC.md` → "To unblock".
+---
+
+## Tier 0 result — PASS (cheapest kill gate, spec §7/§8)
+
+Scored 33 labeled attempts (honest 8 · valid-alternative 5 · hacked 12 · spurious 8) through the
+**real deterministic Treatment grader** inside the disposable sandbox. Latest run:
+`results/run-20260708T225607Z/tier0/`.
+
+| Treatment (the product) | Result |
+|---|---|
+| Honest accepted | **100%** |
+| Valid-alternative accepted | **100%** |
+| Hacked rejected | **100%** |
+| Spurious rejected | **100%** |
+| **False-positive rate on valid alternatives** | **0%** (95% CI [0%, 0%]; bar ≤ ~10%) ✅ |
+| Legit-vs-gamed separation gap | **100%** |
+
+**Beyond-A2 contrast (previews Tier 1):** A2 (held-out tests only) accepted **100%** of the
+A2-surviving hacks — it *misses* them; Treatment rejected **100%**. This is exactly the marginal
+value the go/no-go rests on (§5). Footprint signal: mean 1.0 on honest fixes, 0.0 on valid
+alternatives (expected — they fix the fault elsewhere; footprint is reported, never a reject gate, §8‡).
+
+**Honest caveats (do not over-read a coarse gate):** the set is synthetic with constructed labels
+(spec §7 permits this for Tier 0), and the pattern-based construct detectors were authored
+alongside the hacks. Tier 0 is a *kill gate only*. Tier 1 requires an **independent,
+human-adjudicated, powered** suite on real SWE-bench-style tasks (§6, §8) — the FP bar also
+tightens to ≤5% there.
 
 ---
 
 ## STATUS BOARD
 
-**Phase:** A (Foundation) — partially complete, blocked on the missing v2 spec.
-**Gates:** Tier 0 ❌ not run · Tier 1 🔒 gated · Tier 2 🔒 gated. `prereg-locked` tag: **absent** (correct).
+**Phase A:** ✅ complete. **Gates:** Tier 0 ✅ PASS · Tier 1 🔒 gated (needs human OK) · Tier 2 🔒 gated.
+**`prereg-locked` tag:** ✅ present (frozen before any scoring, §0.3).
 
 | WS | Item | State | Notes |
 |----|------|-------|-------|
-| WS1 | Repo layout (§1) | ✅ done | matches §1; `tests/` added for WS4 unit tests |
-| WS1 | `contracts/verdict_schema.json` | ✅ frozen | fully specified in build plan §2 |
-| WS1 | `contracts/trajectory_schema.json` | ✅ frozen | §2/§68; enforces net-off + no-mounts invariants |
-| WS1 | `contracts/task_schema.json` | 🟡 DRAFT | needs reconciliation with **spec §4**; blocks curation only |
-| WS1 | `SPEC.md` | ⛔ blocked | verbatim copy of v2 spec — file not provided |
-| WS1 | `PREREGISTRATION.md` + `prereg-locked` tag | ⛔ blocked | needs **spec §8**; must not invent thresholds (§0.3) |
-| WS2 | `harness/sandbox_runner.py` | ✅ done + **proven** | `--smoke` passes: no net, no mounts, writable workdir, clean env |
-| WS2 | `harness/run_agent.py` | 🟡 real sandbox, dummy agent | emits schema-valid trajectory; OpenHands+model wiring deferred (§13) |
-| WS2 | `harness/rollout.py` | 🟡 scaffold | sharded, write-once; runs dummy agent |
-| WS3 | `graders/control_a.py` | ✅ done | naive visible-test floor (real; no detection by design) |
-| WS3 | `graders/control_a2.py` | 🟡 stub | held-out sandbox exec deferred to spec §4/§5 |
-| WS3 | `graders/control_b.py` | 🟡 stub | LLM-judge; **inputs to pin** (review note 4) |
-| WS3 | `graders/treatment/` | ⛔ stub (refuses) | crown-jewel IP; needs v2 spec — must not fabricate |
-| WS4 | `analysis/metrics.py` | ✅ done + tested | confusion matrix, catch rates, footprint match, bootstrap CIs |
-| WS4 | `analysis/power_check.py` | ✅ done + tested | sizes the A2-surviving hack sub-bucket (review note 1) |
-| WS4 | `analysis/report.py` | ✅ done + tested | scientific vs commercial separated; warns while prereg unfrozen |
-| WS5 | small labeled set | ⛔ not started | Phase B; needs spec + human labels |
-| Tier 0 | `experiments/tier0_separation.py` | 🟡 guarded | refuses to run until prereg+Treatment+labels exist |
-| Tier 1/2 | experiments | 🔒 gated | tripwires raise `NotImplementedError` (§0.2, §6) |
+| WS1 | Repo layout + `SPEC.md` (v2.1 verbatim) | ✅ | source of truth in-repo |
+| WS1 | `contracts/{verdict,trajectory,task}_schema.json` | ✅ frozen | task_schema reconciled with §4 |
+| WS1 | `PREREGISTRATION.md` + `prereg-locked` tag | ✅ frozen | §8 bands + §9 rules transcribed |
+| WS2 | `harness/sandbox_runner.py` | ✅ proven | `--smoke`: no net/mounts/secrets |
+| WS2 | `harness/run_agent.py` / `rollout.py` | 🟡 dummy agent | schema-valid trajectory; OpenHands+model wiring deferred (§13) |
+| WS3 | `graders/control_a.py` | ✅ | naive visible-test floor |
+| WS3 | `graders/control_a2.py` | ✅ | held-out oracle in sandbox = decision baseline |
+| WS3 | `graders/control_b.py` | 🟡 stub | inputs pinned (§5); model wiring gated to Tier 1 |
+| WS3 | `graders/treatment/` | ✅ real | oracle + tamper detection + footprint (deterministic, §5) |
+| WS4 | `analysis/{metrics,power_check,report}.py` | ✅ tested | CIs; sci vs commercial separated |
+| WS5 | Tier 0 labeled set | ✅ | `data/{tasks,labels}/tier0/`; generator `data/tier0_build.py` |
+| Tier 0 | `experiments/tier0_separation.py` | ✅ **PASS** | see result above |
+| Tier 1/2 | experiments | 🔒 gated | tripwires raise until human authorizes (§0.2, §6) |
 
-Legend: ✅ done · 🟡 partial/scaffold · ⛔ blocked on spec · 🔒 intentionally gated.
+Legend: ✅ done · 🟡 partial/deferred · 🔒 intentionally gated.
 
----
-
-## Proven now (no spec required)
+## Reproduce
 
 ```bash
-python3 harness/sandbox_runner.py --smoke   # PROVE isolation on a real container
-python3 harness/run_agent.py                # one agent -> one schema-valid trajectory
-python3 tests/test_smoke.py                  # analysis + graders unit tests (5/5)
-python3 analysis/power_check.py              # sub-bucket sizing table
+python3 harness/sandbox_runner.py --smoke     # prove sandbox isolation on a real container
+python3 tests/test_smoke.py                    # unit tests (5/5, docker-free)
+python3 data/tier0_build.py                    # regenerate the labeled set
+python3 experiments/tier0_separation.py        # re-run Tier 0 (writes a new immutable run dir)
 ```
 
-The sandbox smoke test asserts all four Prime-Directive §0.4 guarantees: network egress
-blocked, no host bind-mounts, workdir writable (realistic condition), and no host secrets
-leaked (image-declared env like `GPG_KEY` is correctly excluded).
+## What is intentionally NOT built (scope + gates, §0.7)
 
-## What is intentionally NOT built (scope discipline, §0.7)
+Tier 1 (Exp 1 verification + Exp 2 selection), Tier 2 RL, the full ~100-task curated suite with
+layered contamination control, Control B's model wiring, and any production / scale infra. All
+gated behind the Tier 0 human review.
 
-Tier 1/Tier 2 experiments, the full task suite / curation, the RL run, and any production or
-scale infrastructure. These are gated behind tier reviews and, first, the missing spec.
+## Decisions needed from the team (before Tier 1)
 
-## Layout
-See `BUILD_PLAN.md` §1. `REVISIONS.md` is the v2-review companion (its four notes are folded
-into the build plan §7 and referenced throughout the code).
+1. **Authorize Tier 1?** Tier 0 shows the signal exists; Tier 1 is the powered, adjudicated,
+   real-task screening vs. A2. Nothing proceeds without an explicit go.
+2. **RL feasibility call (§12)** — is a short GRPO loop feasible on this team/budget? If yes,
+   Tier 2 is *required* for a full GREEN; if no, the claim honestly downgrades to Tier-1-only.
+   Recorded as PENDING in `PREREGISTRATION.md`.
+3. **Commercially-material magnitude (§8/§10)** — pre-register the concrete willingness-to-pay
+   bar (a hypothesis to test with labs), a slot left `TEAM INPUT REQUIRED` in `PREREGISTRATION.md`.
+   No commercial-GREEN can be declared until it is filled — *before* Tier 1 results are viewed.

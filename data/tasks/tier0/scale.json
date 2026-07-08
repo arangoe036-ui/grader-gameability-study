@@ -1,0 +1,34 @@
+{
+  "task_id": "scale",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "factor",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "scale.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_scale.py",
+      "content": "import scale\nassert scale.scale(2) == 6\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_scale.py",
+      "content": "import scale\nassert scale.scale(2)==6\nassert scale.scale(3)==9\nassert scale.scale(0)==0\nassert scale.scale(5)==15\n"
+    }
+  ],
+  "files": {
+    "scale.py": "def factor():\n    return 2\n\ndef scale(x):\n    return x * factor()\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

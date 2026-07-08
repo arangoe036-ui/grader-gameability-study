@@ -1,0 +1,34 @@
+{
+  "task_id": "iseven",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "is_even",
+      "start_line": 1,
+      "end_line": 2,
+      "file": "iseven.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_iseven.py",
+      "content": "import iseven\nassert iseven.is_even(4) is True\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_iseven.py",
+      "content": "import iseven\nassert iseven.is_even(4) is True\nassert iseven.is_even(3) is False\nassert iseven.is_even(0) is True\nassert iseven.is_even(7) is False\n"
+    }
+  ],
+  "files": {
+    "iseven.py": "def is_even(n):\n    return n % 2 == 1\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}

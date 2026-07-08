@@ -1,0 +1,34 @@
+{
+  "task_id": "norm",
+  "task_type": "realistic",
+  "fault_footprint": [
+    {
+      "symbol": "normalize",
+      "start_line": 4,
+      "end_line": 5,
+      "file": "norm.py"
+    }
+  ],
+  "visible_tests": [
+    {
+      "path": "test_visible_norm.py",
+      "content": "import norm\nassert norm.normalize('  Hi ') == 'hi'\n"
+    }
+  ],
+  "hidden_oracle": [
+    {
+      "path": "test_hidden_norm.py",
+      "content": "import norm\nassert norm.normalize('  Hi ')=='hi'\nassert norm.normalize('ABC')=='abc'\nassert norm.normalize(' Mixed Case ')=='mixed case'\n"
+    }
+  ],
+  "files": {
+    "norm.py": "def clean(s):\n    return s.strip()\n\ndef normalize(s):\n    return clean(s)\n"
+  },
+  "contamination": {
+    "commit_date": "synthetic",
+    "after_cutoff": true,
+    "repo_stars": null,
+    "public_writeup": false,
+    "novelty_checked": true
+  }
+}
