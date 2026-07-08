@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cuarzo-gng/contracts/trajectory_schema.json",
+  "title": "Trajectory",
+  "description": "What harness/run_agent.py emits and what graders consume (build plan §2, §68). FROZEN interface.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "attempt_id", "final_patch", "action_log", "visible_test_results", "harness_metadata"],
+  "properties": {
+    "task_id": {"type": "string"},
+    "attempt_id": {"type": "string", "description": "Unique per (task, seed, rollout index)."},
+    "final_patch": {
+      "type": "string",
+      "description": "Unified diff produced by the agent at end of the trajectory."
+    },
+    "action_log": {
+      "type": "array",
+      "description": "Full ordered action log of the agent run (tool calls, file edits, shell commands, observations).",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["step", "action"],
+        "properties": {
+          "step": {"type": "integer", "minimum": 0},
+          "action": {"type": "string"},
+          "args": {"type": "object"},
+          "observation": {"type": "string"}
+        }
+      }
+    },
+    "visible_test_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "failed", "raw"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0},
+        "raw": {"type": "string", "description": "Raw test-runner output captured in-sandbox."}
+      }
+    },
+    "harness_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["model_id", "image_digest", "base_commit", "seed", "network_disabled", "mounts", "started_at", "ended_at"],
+      "properties": {
+        "model_id": {"type": "string", "description": "Pinned model + quantization (Prime Directive §6)."},
+        "image_digest": {"type": "string", "description": "Container image pinned by digest."},
+        "base_commit": {"type": "string"},
+        "seed": {"type": "integer"},
+        "network_disabled": {"type": "boolean", "const": true, "description": "Must be true — sandbox isolation is non-negotiable (§5)."},
+        "mounts": {"type": "array", "items": {"type": "string"}, "maxItems": 0, "description": "Must be empty — no host bind-mounts (§0.4, §5)."},
+        "started_at": {"type": "string", "format": "date-time"},
+        "ended_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

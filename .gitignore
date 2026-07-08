@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+# results are immutable & can be large; keep dirs, ignore contents except manifests
+results/run-*/
+!results/run-*/**/manifest.json

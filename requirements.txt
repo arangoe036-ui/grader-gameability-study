@@ -1,0 +1,2 @@
+# Phase A runs on the stdlib alone. Optional niceties:
+jsonschema>=4  # strict contract validation (graders fall back to manual checks without it)
