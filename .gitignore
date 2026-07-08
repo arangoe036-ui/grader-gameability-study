@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .DS_Store
-# results are immutable & can be large; keep dirs, ignore contents except manifests
-results/run-*/
-!results/run-*/**/manifest.json
+# Bulk rollout trajectory dumps can be large — ignore the per-attempt shard JSONs only.
+# DO track gate artifacts (results/run-*/tier0/verdict.json + summary.md) and manifests.
+results/run-*/shard-*/*.json
+!results/run-*/shard-*/manifest.json
