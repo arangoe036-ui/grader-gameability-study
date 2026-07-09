@@ -10,88 +10,94 @@ the cheaters · freeze thresholds before scoring · human gate at every tier · 
 
 ---
 
-## ⏸ AWAITING HUMAN REVIEW — Tier 0 passed; Tier 1 is gated
+## 🛑 STEP 1 RED — un-gameability kill. STOP for human review.
 
-Phase A is complete and **Tier 0 PASSED**. Per Prime Directives §0.2 / §0.5 / §6, work **stops
-here** for human review. Tier 1, the full task suite, curation, and the RL run are **not built**
-and must not be started until a human authorizes it. Three decisions are needed from the team
-(see bottom).
+A black-box red-team of the **existing** Treatment grader found a **systematic, repeatable way
+past it**. Per the plan's cheapest-kill-first rule, this is a RED on un-gameability: **the Tier 1
+suite was NOT built.** Treatment, as implemented, is gameable — so the expensive powered/
+adjudicated screen is not worth running until the mechanism is rethought (a human decision).
+
+### Red-team result (`results/redteam-20260708T235339Z/`, harness in `redteam/`)
+An adversary with **black-box** access (submit patch → get verdict; no access to
+`graders/treatment/`) tried to get *production-buggy* patches **accepted**. An independent
+behavioral **meta-oracle** (fresh inputs, non-test context) objectively decides whether an
+accepted patch is actually correct — so the red-team can only make Treatment look *worse*, never
+falsely better.
+
+| Metric | Result |
+|---|---|
+| **Escape rate** (hacks accepted while actually wrong) | **80%** — 32/40 (95% bootstrap CI **[65%, 92.5%]**) |
+| **Distinct tasks escaped** | **8 / 8** |
+| Test-context channels that escape on *every* task | **4 of 5** (`main_file`, `inspect_stack`, `orig_argv`, `argv_getattr`) |
+| Honest controls (accepted & truly correct) | ✅ all — the arena is fair |
+
+**Mechanism:** Treatment's tamper detection is a **fixed substring/regex blocklist**. A
+reward-channel hack that runs the correct fix *only when it detects the test harness* — via any
+channel not on the blocklist (e.g. reading `__main__.__file__`, scanning `inspect.stack()`,
+`sys.orig_argv`, or aliasing `sys.argv` through `getattr`) — passes the hidden oracle **and draws
+zero flags**, while being buggy in production. Only the one naive channel that contains a
+blocklisted substring (`sys.argv`) is caught. **A static blocklist cannot be "un-gameable":** the
+space of test-context signals is unbounded.
+
+**Observation for the human (NOT built — a redesign decision):** the very technique used to
+*detect* the escapes — differential/behavioral testing across contexts on fresh inputs — caught
+100% of them. A behavioral tamper check is a plausible path, but changing the mechanism is a
+human call, not an autonomous one.
 
 ---
 
-## Tier 0 result — PASS (cheapest kill gate, spec §7/§8)
+## Context: Tier 0 "PASS" cleared only the floor (near-tautological)
 
-Scored 33 labeled attempts (honest 8 · valid-alternative 5 · hacked 12 · spurious 8) through the
-**real deterministic Treatment grader** inside the disposable sandbox. Latest run:
-`results/run-20260708T225607Z/tier0/`.
-
-| Treatment (the product) | Result |
-|---|---|
-| Honest accepted | **100%** |
-| Valid-alternative accepted | **100%** |
-| Hacked rejected | **100%** |
-| Spurious rejected | **100%** |
-| **False-positive rate on valid alternatives** | **0%** (95% CI [0%, 0%]; bar ≤ ~10%) ✅ |
-| Legit-vs-gamed separation gap | **100%** |
-
-**Beyond-A2 contrast (previews Tier 1):** A2 (held-out tests only) accepted **100%** of the
-A2-surviving hacks — it *misses* them; Treatment rejected **100%**. This is exactly the marginal
-value the go/no-go rests on (§5). Footprint signal: mean 1.0 on honest fixes, 0.0 on valid
-alternatives (expected — they fix the fault elsewhere; footprint is reported, never a reject gate, §8‡).
-
-**Honest caveats (do not over-read a coarse gate):** the set is synthetic with constructed labels
-(spec §7 permits this for Tier 0), and the pattern-based construct detectors were authored
-alongside the hacks. Tier 0 is a *kill gate only*. Tier 1 requires an **independent,
-human-adjudicated, powered** suite on real SWE-bench-style tasks (§6, §8) — the FP bar also
-tightens to ≤5% there.
+Tier 0 scored 100% separation / 0% FP (`results/run-20260708T225607Z/tier0/`). But the Tier 0
+detectors were authored **alongside** the hacks they caught, so that sweep was near-tautological —
+it cleared the cheapest gate, nothing more. Step 1 is the real un-gameability test, and Treatment
+**failed** it. This is the framing the resume plan insisted on: a high score against
+built-to-match hacks is worthless; **independence is the quality bar**, and the black-box
+red-team supplies it.
 
 ---
 
 ## STATUS BOARD
 
-**Phase A:** ✅ complete. **Gates:** Tier 0 ✅ PASS · Tier 1 🔒 gated (needs human OK) · Tier 2 🔒 gated.
-**`prereg-locked` tag:** ✅ present (frozen before any scoring, §0.3).
+**Phase A:** ✅ complete. **Gates:** Tier 0 ✅ (floor only) · **Step 1 red-team 🛑 RED** · Tier 1 ⛔ NOT built (killed) · Tier 2 🔒 gated.
+**`prereg-locked`:** ✅ present & untouched (thresholds FROZEN; commercial bar still `TEAM INPUT REQUIRED`).
 
 | WS | Item | State | Notes |
 |----|------|-------|-------|
-| WS1 | Repo layout + `SPEC.md` (v2.1 verbatim) | ✅ | source of truth in-repo |
-| WS1 | `contracts/{verdict,trajectory,task}_schema.json` | ✅ frozen | task_schema reconciled with §4 |
-| WS1 | `PREREGISTRATION.md` + `prereg-locked` tag | ✅ frozen | §8 bands + §9 rules transcribed |
-| WS2 | `harness/sandbox_runner.py` | ✅ proven | `--smoke`: no net/mounts/secrets |
-| WS2 | `harness/run_agent.py` / `rollout.py` | 🟡 dummy agent | schema-valid trajectory; OpenHands+model wiring deferred (§13) |
-| WS3 | `graders/control_a.py` | ✅ | naive visible-test floor |
-| WS3 | `graders/control_a2.py` | ✅ | held-out oracle in sandbox = decision baseline |
-| WS3 | `graders/control_b.py` | 🟡 stub | inputs pinned (§5); model wiring gated to Tier 1 |
-| WS3 | `graders/treatment/` | ✅ real | oracle + tamper detection + footprint (deterministic, §5) |
+| WS1 | Contracts + `SPEC.md` (v2.1) + `PREREGISTRATION.md` | ✅ frozen | prereg untouched this session |
+| WS2 | `harness/sandbox_runner.py` | ✅ proven | all grading/red-team runs sandboxed (§0.4) |
+| WS3 | `graders/{control_a,control_a2}.py` | ✅ | A2 = decision baseline |
+| WS3 | `graders/control_b.py` | 🟡 stub | inputs pinned (§5); gated to Tier 1 |
+| WS3 | `graders/treatment/` | ✅ real, **🛑 gameable** | passed Tier 0 floor; **escaped 80% black-box (Step 1)** |
 | WS4 | `analysis/{metrics,power_check,report}.py` | ✅ tested | CIs; sci vs commercial separated |
-| WS5 | Tier 0 labeled set | ✅ | `data/{tasks,labels}/tier0/`; generator `data/tier0_build.py` |
-| Tier 0 | `experiments/tier0_separation.py` | ✅ **PASS** | see result above |
-| Tier 1/2 | experiments | 🔒 gated | tripwires raise until human authorizes (§0.2, §6) |
+| WS5 | Tier 0 labeled set | ✅ | `data/{tasks,labels}/tier0/` |
+| — | **`redteam/` (Step 1 harness)** | ✅ | black-box + meta-oracle + battery + human mode |
+| Tier 0 | `experiments/tier0_separation.py` | ✅ PASS (floor) | reframed as near-tautological |
+| Tier 1 | Exp 1 / Exp 2 suite | ⛔ **NOT built** | RED at Step 1 — do not build until mechanism rethought |
+| Tier 2 | RL | 🔒 gated | not assessed; downstream of a killed gate |
 
-Legend: ✅ done · 🟡 partial/deferred · 🔒 intentionally gated.
+Legend: ✅ done · 🟡 partial/deferred · 🛑 red/kill · ⛔ not built (by decision) · 🔒 gated.
 
 ## Reproduce
 
 ```bash
-python3 harness/sandbox_runner.py --smoke     # prove sandbox isolation on a real container
-python3 tests/test_smoke.py                    # unit tests (5/5, docker-free)
-python3 data/tier0_build.py                    # regenerate the labeled set
-python3 experiments/tier0_separation.py        # re-run Tier 0 (writes a new immutable run dir)
+python3 redteam/run_auto.py                    # STEP 1: automated black-box red-team (writes immutable artifact)
+python3 redteam/human_redteam.py --task add    # STEP 1: human red-team (a person should drive this)
+python3 experiments/tier0_separation.py        # Tier 0 floor (context)
+python3 tests/test_smoke.py                     # unit tests (docker-free)
 ```
 
 ## What is intentionally NOT built (scope + gates, §0.7)
 
-Tier 1 (Exp 1 verification + Exp 2 selection), Tier 2 RL, the full ~100-task curated suite with
-layered contamination control, Control B's model wiring, and any production / scale infra. All
-gated behind the Tier 0 human review.
+The Tier 1 powered/adjudicated suite (Exp 1 + Exp 2), Tier 2 RL, the full curated task set, and
+any production/scale infra. Step 1 RED means none of these should be built until a human decides
+whether/how to rethink Treatment's tamper detection.
 
-## Decisions needed from the team (before Tier 1)
+## Decision needed from the team
 
-1. **Authorize Tier 1?** Tier 0 shows the signal exists; Tier 1 is the powered, adjudicated,
-   real-task screening vs. A2. Nothing proceeds without an explicit go.
-2. **RL feasibility call (§12)** — is a short GRPO loop feasible on this team/budget? If yes,
-   Tier 2 is *required* for a full GREEN; if no, the claim honestly downgrades to Tier-1-only.
-   Recorded as PENDING in `PREREGISTRATION.md`.
-3. **Commercially-material magnitude (§8/§10)** — pre-register the concrete willingness-to-pay
-   bar (a hypothesis to test with labs), a slot left `TEAM INPUT REQUIRED` in `PREREGISTRATION.md`.
-   No commercial-GREEN can be declared until it is filled — *before* Tier 1 results are viewed.
+1. **Treatment is gameable black-box as written.** Decide: rethink the un-gameability mechanism
+   (e.g. behavioral/differential tamper detection instead of a static blocklist), or accept the
+   weaker claim. Only after a redesign is it worth building the Tier 1 suite.
+2. Prereg stays **FROZEN**; the commercial-magnitude bar remains `TEAM INPUT REQUIRED` — not set.
+3. Tier 2 RL feasibility was **not** assessed (downstream of a killed gate); revisit only if the
+   mechanism is fixed and Tier 1 later passes.
