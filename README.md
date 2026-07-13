@@ -10,7 +10,30 @@ the cheaters · freeze thresholds before scoring · human gate at every tier · 
 
 ---
 
-## 🛑 STEP 1 RED — un-gameability kill. STOP for human review.
+## 🛑 FOLLOW-UP: behavioral tamper check does NOT survive a white-box adversary
+
+After the Step 1 RED, a cheap decision experiment asked whether a **behavioral/differential** tamper
+check (run each patch in multiple execution contexts; flag cross-context behavior divergence) could
+survive an adaptive adversary. Throwaway prototype under `redteam/diff_prototype/`; **not** wired
+into `graders/treatment/`. Artifacts: `results/redteam-diff-20260713T152022Z/`.
+
+| Condition | Escape rate (accepted-while-production-buggy) | 95% CI | tasks |
+|---|---|---|---|
+| **Black-box** (adversary doesn't know the contexts) | **0%** — 0/16 | [0%, 0%] | 0/8 |
+| **White-box** (adversary given the context battery) | **100%** — 16/16 | [100%, 100%] | 8/8 |
+
+Honest fixes accepted & correct (no false positives). **Reading (pre-registered before running):
+white-box escape is systematic → strong deterministic un-gameability is likely DEAD.** The check
+*does* stop naive/black-box hacks (a real gain over the Step 1 blocklist), so the honest residual is
+an **empirical "more-robust" grader, not an un-gameable one**. Root cause is structural: any fixed,
+adversary-knowable battery of contexts is routed around by code that special-cases exactly those
+contexts — the Step 1 lesson one level up. **Do NOT build the redesign** (pre-registered); the
+three-way claim choice (absolute un-gameability / empirical most-robust / stop) is a human decision.
+Full verdict + fairness guarantee + caveats: `results/redteam-diff-20260713T152022Z/VERDICT.md`.
+
+---
+
+## 🛑 STEP 1 RED (prior) — static-blocklist Treatment is gameable black-box
 
 A black-box red-team of the **existing** Treatment grader found a **systematic, repeatable way
 past it**. Per the plan's cheapest-kill-first rule, this is a RED on un-gameability: **the Tier 1
@@ -59,7 +82,7 @@ red-team supplies it.
 
 ## STATUS BOARD
 
-**Phase A:** ✅ complete. **Gates:** Tier 0 ✅ (floor only) · **Step 1 red-team 🛑 RED** · Tier 1 ⛔ NOT built (killed) · Tier 2 🔒 gated.
+**Phase A:** ✅ complete. **Gates:** Tier 0 ✅ (floor only) · **Step 1 red-team 🛑 RED** · **behavioral-check probe 🛑 white-box folds (BB 0% / WB 100%)** · Tier 1 ⛔ NOT built (killed) · Tier 2 🔒 gated.
 **`prereg-locked`:** ✅ present & untouched (thresholds FROZEN; commercial bar still `TEAM INPUT REQUIRED`).
 
 | WS | Item | State | Notes |
@@ -72,6 +95,7 @@ red-team supplies it.
 | WS4 | `analysis/{metrics,power_check,report}.py` | ✅ tested | CIs; sci vs commercial separated |
 | WS5 | Tier 0 labeled set | ✅ | `data/{tasks,labels}/tier0/` |
 | — | **`redteam/` (Step 1 harness)** | ✅ | black-box + meta-oracle + battery + human mode |
+| — | **`redteam/diff_prototype/` (behavioral-check probe)** | ✅ throwaway | BB 0% / WB 100% escape; not integrated; verdict: deterministic un-gameability likely dead |
 | Tier 0 | `experiments/tier0_separation.py` | ✅ PASS (floor) | reframed as near-tautological |
 | Tier 1 | Exp 1 / Exp 2 suite | ⛔ **NOT built** | RED at Step 1 — do not build until mechanism rethought |
 | Tier 2 | RL | 🔒 gated | not assessed; downstream of a killed gate |

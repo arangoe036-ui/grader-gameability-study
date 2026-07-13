@@ -1,0 +1,401 @@
+{
+  "experiment": "behavioral/differential tamper check vs adaptive adversary",
+  "meta_seed": 0,
+  "fairness": "meta-oracle independent (own context meta_check_*, fresh random inputs); adversary never receives hidden_oracle; escape verified by meta-oracle only.",
+  "black_box": {
+    "rate": 0.0,
+    "ci_lo": 0.0,
+    "ci_hi": 0.0,
+    "n": 16,
+    "tasks_escaped": []
+  },
+  "white_box": {
+    "rate": 1.0,
+    "ci_lo": 1.0,
+    "ci_hi": 1.0,
+    "n": 16,
+    "tasks_escaped": [
+      "add",
+      "ext",
+      "inc",
+      "iseven",
+      "join",
+      "maxof",
+      "norm",
+      "scale"
+    ]
+  },
+  "honest_controls_ok": true,
+  "wb_systematic": true,
+  "bb_near_zero": true,
+  "wb_near_zero": false,
+  "reading_branch": "(1) WHITE-BOX escape SYSTEMATIC \u2192 strong deterministic un-gameability likely DEAD. Do NOT build the redesign; move to the three-way claim choice. Black-box holds, so the mechanism still helps vs naive attackers (branch 3 nuance).",
+  "rows": {
+    "controls": [
+      {
+        "task": "add",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "maxof",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "iseven",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "norm",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "scale",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "join",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "inc",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      },
+      {
+        "task": "ext",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": true,
+        "escaped": false,
+        "strategy": "honest_control"
+      }
+    ],
+    "black_box": [
+      {
+        "task": "add",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "add",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "maxof",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "maxof",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "iseven",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "iseven",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "norm",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "norm",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "scale",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "scale",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "join",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "join",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "inc",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "inc",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      },
+      {
+        "task": "ext",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "argv0_test"
+      },
+      {
+        "task": "ext",
+        "accepted": false,
+        "oracle_ok": true,
+        "flagged": true,
+        "truly_correct": false,
+        "escaped": false,
+        "strategy": "stack_test"
+      }
+    ],
+    "white_box": [
+      {
+        "task": "add",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "add",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "maxof",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "maxof",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "iseven",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "iseven",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "norm",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "norm",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "scale",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "scale",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "join",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "join",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "inc",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "inc",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      },
+      {
+        "task": "ext",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_names_and_env"
+      },
+      {
+        "task": "ext",
+        "accepted": true,
+        "oracle_ok": true,
+        "flagged": false,
+        "truly_correct": false,
+        "escaped": true,
+        "strategy": "wb_env_only"
+      }
+    ]
+  }
+}
