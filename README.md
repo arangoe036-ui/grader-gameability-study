@@ -10,6 +10,33 @@ the cheaters · freeze thresholds before scoring · human gate at every tier · 
 
 ---
 
+## How to read this repo
+
+**The negative result is the deliverable.** This experiment was designed to kill a bad idea cheaply
+rather than to ship a grader, and it succeeded: the red-team found a systematic escape, so the
+expensive downstream tiers were **deliberately never built**. If you open `experiments/tier1_*.py`
+or `graders/control_b.py` and find `NotImplementedError`, that is the stop rule working as designed
+— not abandoned work. The `STATUS BOARD` below marks every component's real state, including stubs.
+
+What this repo demonstrates, if you're evaluating the engineering and the method:
+
+- **Pre-registration before scoring** — `PREREGISTRATION.md` freezes thresholds and the reading of
+  the outcome *before* any data is collected, so the conclusion can't be fit to the result after the fact.
+- **Adversarial self-evaluation** — the red-team attacks *our own* grader black-box, with an
+  independent behavioral meta-oracle deciding correctness so the harness can only make the grader
+  look worse, never falsely better.
+- **Quantified, honest reporting** — escape rates with 95% bootstrap CIs, fairness controls
+  (honest patches must still be accepted), and a documented root cause instead of a headline number.
+- **Reproducible artifacts** — every run writes an immutable timestamped directory under `results/`,
+  and all grading and adversarial code executes inside a proven sandbox (`harness/sandbox_runner.py`).
+- **Knowing when to stop** — the pre-registered reading said a fixed, adversary-knowable check is
+  structurally routable, so the redesign was explicitly *not* built. That call was left to a human.
+
+**Scope:** ~2.3K lines of Python plus a frozen spec and pre-registration. This is a research
+artifact, not a library or a product — expect experiment scripts and decision records, not an API.
+
+---
+
 ## 🛑 FOLLOW-UP: behavioral tamper check does NOT survive a white-box adversary
 
 After the Step 1 RED, a cheap decision experiment asked whether a **behavioral/differential** tamper
