@@ -1,6 +1,6 @@
-# Cuarzo Go/No-Go
+# Grader Gameability Study
 
-A **decision experiment**, not a product build. Question: does Cuarzo's un-gameable,
+A **decision experiment**, not a product build. Question: does an un-gameable,
 footprint-relative grading beat current lab best-practice (a competent hidden-test baseline,
 "A2") by a commercially decisive margin — under optimization pressure?
 
