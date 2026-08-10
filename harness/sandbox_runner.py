@@ -37,8 +37,23 @@ def _run(cmd: List[str], timeout: Optional[float] = None) -> Tuple[int, str, str
     return p.returncode, p.stdout, p.stderr
 
 
+def _daemon_up() -> bool:
+    """True iff the `docker` CLI exists AND the daemon answers. Both are hard prerequisites."""
+    try:
+        rc, _, _ = _run(["docker", "info"])
+    except OSError:
+        return False
+    return rc == 0
+
+
 def image_digest(image: str) -> str:
-    """Pinned digest for the image (Prime Directive §6). Empty string if none locally."""
+    """Pinned digest for the image (Prime Directive §6). Empty string if none locally.
+
+    Returns "" rather than raising when docker is absent, so provenance capture degrades to
+    "digest unrecorded" instead of taking down the caller.
+    """
+    if not _daemon_up():
+        return ""
     rc, out, _ = _run(["docker", "image", "inspect", "--format", "{{index .RepoDigests 0}}", image])
     if rc == 0 and out.strip() and out.strip() != "<no value>":
         return out.strip()
@@ -75,6 +90,15 @@ def run_in_sandbox(
     pids_limit: int = 512,
 ) -> SandboxResult:
     """Execute `command` in a throwaway container with no net, no mounts, clean env."""
+    if not _daemon_up():
+        raise SandboxError(
+            "Docker is a hard prerequisite and is not available (the `docker` CLI is missing or "
+            "the daemon is not answering `docker info`). Everything that executes candidate "
+            "patches runs in a container by Prime Directive §0.4, so there is no host fallback. "
+            "Install/start Docker and `docker pull python:3.11-slim`, then retry. "
+            "See the Prerequisites section of README.md; `python tests/test_smoke.py` is the only "
+            "docker-free entry point."
+        )
     name = f"cuarzo-sbx-{uuid.uuid4().hex[:12]}"
     digest = image_digest(image)
     env_allowlist = env_allowlist or {}
@@ -184,11 +208,6 @@ def verify_isolation(image: str = "python:3.11-slim") -> dict:
     if not report["all_guarantees_pass"]:
         raise SandboxError(f"isolation guarantees VIOLATED: {json.dumps(report, indent=2)}")
     return report
-
-
-def _daemon_up() -> bool:
-    rc, _, _ = _run(["docker", "info"])
-    return rc == 0
 
 
 if __name__ == "__main__":

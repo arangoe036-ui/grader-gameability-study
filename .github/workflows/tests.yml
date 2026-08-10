@@ -1,0 +1,55 @@
+# Minimal CI: run the docker-free test suite on both a UTF-8 and a cp1252 default locale.
+#
+# Why Windows is in the matrix and not an afterthought: the only real crash this repo ever shipped
+# was six `open()` calls without `encoding=`, which work on any UTF-8 default locale and raise
+# UnicodeDecodeError on Windows. There was no CI, so it sat in main. A Linux-only workflow would
+# not have caught it, and would not catch the next one.
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: tests (${{ matrix.os }}, py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # requirements.txt is the ONLY declared dependency file and jsonschema is its only entry
+      # (optional at that - graders fall back to manual checks without it). Installed here so the
+      # jsonschema validation path is exercised, not just the fallback.
+      - name: Install declared dependencies
+        run: python -m pip install --upgrade pip -r requirements.txt
+
+      # Primary gate. Runs without pytest, exactly as README's Reproduce block says.
+      - name: Smoke tests (stdlib runner, docker-free)
+        run: python tests/test_smoke.py
+
+      # Regression guard for the bug above: fail on any open() that relies on the platform default
+      # encoding, anywhere in the code paths the tests exercise.
+      - name: Fail on implicit default encoding
+        run: python -X warn_default_encoding -W error::EncodingWarning tests/test_smoke.py
+
+      # pytest is a CI-only convenience, deliberately NOT added to requirements.txt: the suite is
+      # designed to run on the stdlib alone.
+      - name: Same tests under pytest
+        run: |
+          python -m pip install pytest
+          python -m pytest tests/ -q
+
+      # Everything else in the repo needs Docker (Prime Directive 0.4), so it cannot run here.
+      # Byte-compiling at least proves no module is syntactically broken.
+      - name: Byte-compile every module
+        run: python -m compileall -q analysis experiments graders harness redteam tests data

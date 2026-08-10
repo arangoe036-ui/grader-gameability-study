@@ -25,7 +25,8 @@ _now = lambda: _dt.datetime.now(_dt.timezone.utc).isoformat()
 def _validate_trajectory(traj: dict) -> dict:
     try:
         import jsonschema
-        with open(os.path.join(os.path.dirname(__file__), "..", "contracts", "trajectory_schema.json")) as fh:
+        with open(os.path.join(os.path.dirname(__file__), "..", "contracts",
+                               "trajectory_schema.json"), encoding="utf-8") as fh:
             jsonschema.validate(traj, json.load(fh))
     except ImportError:
         md = traj["harness_metadata"]

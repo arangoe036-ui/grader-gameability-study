@@ -16,6 +16,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from run_agent import run_agent  # noqa: E402
+from provenance import provenance  # noqa: E402
 
 _RESULTS = os.path.join(os.path.dirname(__file__), "..", "results")
 
@@ -36,15 +37,19 @@ def rollout(tasks: list[dict], n_attempts: int = 8, shard_index: int = 0,
     os.makedirs(shard_dir)
 
     my_tasks = tasks[shard_index::n_shards]  # deterministic shard slice
-    manifest = {"shard": shard_index, "n_shards": n_shards, "n_attempts": n_attempts, "tasks": []}
+    manifest = {"shard": shard_index, "n_shards": n_shards, "n_attempts": n_attempts,
+                "mode": mode, "seeds": list(range(n_attempts)),
+                "provenance": provenance(image="python:3.11-slim",
+                                         seeds={"attempt_seeds": list(range(n_attempts))}),
+                "tasks": []}
     for task in my_tasks:
         for seed in range(n_attempts):
             traj = run_agent(task, seed=seed, mode=mode)
             out = os.path.join(shard_dir, f"{traj['attempt_id']}.json")
-            with open(out, "w") as fh:
+            with open(out, "w", encoding="utf-8") as fh:
                 json.dump(traj, fh, indent=2)
         manifest["tasks"].append(task.get("id"))
-    with open(os.path.join(shard_dir, "manifest.json"), "w") as fh:
+    with open(os.path.join(shard_dir, "manifest.json"), "w", encoding="utf-8") as fh:
         json.dump(manifest, fh, indent=2)
     return shard_dir
 

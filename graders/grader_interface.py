@@ -48,7 +48,7 @@ def validate_verdict(v: Verdict) -> Verdict:
     d = v.to_dict()
     try:
         import jsonschema  # optional
-        with open(os.path.join(_CONTRACTS, "verdict_schema.json")) as fh:
+        with open(os.path.join(_CONTRACTS, "verdict_schema.json"), encoding="utf-8") as fh:
             jsonschema.validate(d, json.load(fh))
     except ImportError:
         assert isinstance(d["pass"], bool)

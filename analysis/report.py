@@ -23,7 +23,7 @@ def _prereg_frozen() -> bool:
     """True only if PREREGISTRATION.md exists and is NOT the BLOCKED placeholder."""
     if not os.path.exists(_PREREG):
         return False
-    with open(_PREREG) as fh:
+    with open(_PREREG, encoding="utf-8") as fh:
         return "STATUS: BLOCKED" not in fh.read()
 
 
