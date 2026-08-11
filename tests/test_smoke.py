@@ -60,7 +60,9 @@ def test_report_when_prereg_frozen():
     v, l = _fixtures()
     panels = {"control_a2": metrics.headline_panel(v, l), "treatment": metrics.headline_panel(v, l)}
     rep = report.full_report(panels)
-    # PREREGISTRATION.md is now FROZEN (tag prereg-locked) -> report is binding, no warning.
+    # PREREGISTRATION.md is FROZEN -> report is binding, no warning. NOTE: the build plan asked
+    # for a git tag prereg-locked; it was never created. Freeze is evidenced by commit ordering
+    # (689a82d 18:30 precedes the first measurement artifact f4c44b4 18:59). See the addendum.
     assert rep["prereg_frozen"] is True
     assert rep["WARNING"] is None
     assert rep["scientific"]["kind"] == "SCIENTIFIC" and rep["commercial"]["kind"] == "COMMERCIAL"

@@ -99,3 +99,30 @@ so the CI separates the 80% GREEN boundary from AMBER before locking task counts
     validation of un-gameability.
   - Status: ☐ Feasible ☐ Not feasible — to be recorded by the team. *This is not a threshold and
     does not affect the frozen numbers above.*
+
+---
+
+## Addendum, 2026-08-10 — appended, not edited
+
+The header above states these thresholds are "locked by the git tag `prereg-locked`".
+**That tag was never created.** `git tag -l` in this repository returns nothing, and it is absent
+from the remote. The claim was false when written and is withdrawn here rather than edited away,
+because silently correcting a registration destroys the only property that makes it one.
+
+The freeze is nonetheless verifiable, and by stronger evidence than a tag — a tag can be moved, a
+commit date cannot:
+
+| Commit | Timestamp (2026-07-08 -0400) | What landed |
+|---|---|---|
+| `50e0041` | 18:02:49 | `results/README.md` only — documentation, no data |
+| **`689a82d`** | **18:30:22** | **this file, frozen** |
+| `f4c44b4` | 18:59:00 | first measurement artifact (`tier0/verdict.json`) |
+| `3540f09` | 20:00:15 | Step 1 `redteam.json` |
+
+The freeze precedes every measurement artifact by 29 minutes.
+
+**Scope limit.** This document's decision rule (section 9) covers Tier 0, Tier 1 and Tier 2. It does
+**not** cover the Step 1 red-team, which produced this project's headline result; that rule came
+from an uncommitted planning document and its threshold lives in `redteam/run_auto.py`. No commit
+ordering can repair that after the fact. See the README section "Pre-registration: what it does and
+does not cover".

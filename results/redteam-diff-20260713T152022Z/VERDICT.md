@@ -61,3 +61,29 @@ The decision moves to the three-way claim choice, which is a **human call**:
 3. **Stop** the un-gameability thesis entirely.
 
 Independent firewalled white-box agent corroboration: see `corroboration.md` in this directory.
+
+---
+
+## CORRECTION APPENDED 2026-08-10 (original text above unaltered — Prime Directive section 5)
+
+The intervals reported above as `[0%, 0%]` and `[100%, 100%]` are **not intervals**. A percentile
+bootstrap on a zero-variance sample can only return its own point estimate. Exact
+(Clopper-Pearson) intervals at n = 16:
+
+| Condition | Observed | Exact 95% CI |
+|---|---|---|
+| Black-box | 0 / 16 | **[0%, 20.6%]** |
+| White-box | 16 / 16 | **[79.4%, 100%]** |
+
+**Consequence for the pre-registered reading.** `PREREGISTERED_READING.md` defines "near-zero" as a
+pooled escape-rate 95% CI upper bound below 0.10. At n = 16 the exact upper bound is 20.6%, so
+**`bb_near_zero` is NOT met** — 16 trials cannot establish a rate below 10%. Any claim that the
+behavioral check measurably stops black-box hacks is unsupported at this sample size.
+
+**The white-box conclusion is unaffected.** 16/16 is systematic under any interval, and that is the
+half this verdict rests on: a fixed, adversary-knowable context battery gets routed around.
+
+**Corroboration is prose-only.** `corroboration.md` in this directory carries no committed
+transcript, log, or rerunnable command — including the "fingerprint discovered via 1-bit side
+channel" claim, which rests entirely on an agent's self-report. `arena.py` exposes the CLI a reader
+could use to redo it; nothing here shows that it was done.

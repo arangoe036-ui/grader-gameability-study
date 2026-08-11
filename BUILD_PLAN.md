@@ -151,3 +151,16 @@ These four came out of the v2 review and are already reflected above; noting the
 ---
 
 *Cheapest kill first · sandbox the cheaters · freeze the thresholds · human gate at every tier · parallelize on frozen interfaces · stop at the first RED.*
+
+---
+
+## Note appended 2026-08-10
+
+This plan instructs `git tag prereg-locked` before any scoring. **That step was not carried out** —
+no tag exists in this repository. The freeze is instead evidenced by commit ordering: `689a82d`
+(2026-07-08 18:30:22) froze `PREREGISTRATION.md` and precedes the first measurement artifact
+`f4c44b4` (18:59:00) by 29 minutes. See the `PREREGISTRATION.md` addendum.
+
+The spec documents referenced above (`cuarzo-benchmark-go-no-go-spec-v2.md`, and
+`cuarzo-benchmark-go-no-go-spec.md` in `REVISIONS.md`) are **not in this repository**. `SPEC.md` is
+the copied-in scientific source of truth; section references point to the original.
