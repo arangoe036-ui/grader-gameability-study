@@ -1,5 +1,9 @@
 # Grader Gameability Study
 
+**A pre-registered black-box red team against my own code grader broke it in 80% of attempts** — 95% bootstrap CI [65%, 92.5%]. That establishes something stronger than "the blocklist had gaps": a static tamper blocklist is *structurally* routable, so the expensive downstream tiers were never worth building.
+
+The result is trustworthy because the experiment was built so it could not flatter itself. Thresholds and the reading of the outcome were frozen in a pre-registration **before any data was collected**, and an independent behavioural meta-oracle decided correctness — so the harness could only ever make the grader look *worse*, never falsely better.
+
 A **decision experiment**, not a product build. Question: does an un-gameable,
 footprint-relative grading beat current lab best-practice (a competent hidden-test baseline,
 "A2") by a commercially decisive margin — under optimization pressure?
